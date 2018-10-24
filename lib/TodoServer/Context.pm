@@ -18,25 +18,16 @@ package TodoServer::Context {;
     $self->internal_error("unknown account type: $t")->throw
       unless $t eq 'generic';
 
-    $i //= $self->user->accountId;
+    $i //= $self->processor->sole_accountId;
 
     $self->error("invalidArgument" => {})->throw
-      unless $i eq $self->user->accountId;
+      unless $i eq $self->processor->sole_accountId;
 
     return TodoServer::Context::WithAccount->new({
       root_context => $self,
       account_type => $t,
       accountId    => $i,
     });
-  }
-
-  sub may_call ($self, $method, $arg) {
-    # We don't have the tech to create space cookies
-    if ($method eq 'Cookie/set' && $arg->{outofthisworld}) {
-      return 0;
-    }
-
-    return 1;
   }
 
   with 'Ix::Context';

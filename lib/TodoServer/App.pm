@@ -4,6 +4,7 @@ use Moose;
 use experimental qw(signatures postderef);
 
 use TodoServer;
+use TodoServer::Schema;
 
 use JSON::MaybeXS;
 
@@ -30,21 +31,17 @@ sub drain_transaction_log ($self) {
 
 sub oneoff ($class) {
   require Test::PgMonger;
-  my $db = Test::PgMonger->new->create_database({
+  our $db = Test::PgMonger->new->create_database({
     extra_sql_statements => [
       "CREATE EXTENSION IF NOT EXISTS citext;",
     ],
   });
 
-  my $schema = TestServer->new({
-    connect_info => [ $db->connect_info ],
-  })->schema_connection;
-
-  $schema->deploy;
-
   my $processor = TodoServer->new({
-    connect_info => $db->connect_info,
+    connect_info => [ $db->connect_info ],
   });
+
+  $processor->schema_connection->deploy;
 
   return $class->new({ processor => $processor })->to_app;
 }

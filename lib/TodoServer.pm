@@ -36,7 +36,6 @@ sub file_exception_report ($self, $ctx, $exception) {
 
 sub connect_info;
 has connect_info => (
-  lazy     => 1,
   traits   => [ 'Array' ],
   handles  => { connect_info => 'elements' },
   required => 1,
@@ -47,6 +46,11 @@ sub database_defaults {
     "SET LOCK_TIMEOUT TO '2s'",
   );
 }
+
+has sole_accountId => (
+  is      => 'ro',
+  default => sub { lc guid_string() },
+);
 
 sub get_context ($self, $arg) {
   TodoServer::Context->new({
