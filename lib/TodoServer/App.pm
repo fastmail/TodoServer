@@ -46,4 +46,48 @@ sub oneoff ($class) {
   return $class->new({ processor => $processor })->to_app;
 }
 
+around _core_request => sub ($orig, $self, $ctx, $req) {
+  my $path = $req->path_info;
+
+  if ($path eq '/.well-known/jmap') {
+    return [
+      200,
+      [ "Content-Type" => 'application/json' ],
+      [
+        JSON->new->encode({
+          apiUrl    => "/api",
+          accountId => $self->processor->sole_accountId,
+        })
+      ],
+    ];
+  }
+
+  if ($path =~ m{^/(examples|build)/}n) {
+    if (-f ".$path") {
+      my $type  = $path =~ /\.css$/ ? 'text/css'
+                : $path =~ /\.js$/  ? 'text/javascript'
+                : $path =~ /\.png$/ ? 'image/png'
+                :                     'application/octet-stream';
+
+      open my $fh, '<', ".$path" or die "can't read $path: $!";
+      return [
+        200,
+        [ 'Content-Type' => $type ],
+        $fh,
+      ];
+    }
+
+    open my $fh, '<', 'examples/Todo/index.html'
+      or die "can't read index: $!";
+
+    return [
+      200,
+      [ "Content-Type" => 'text/html' ],
+      $fh,
+    ];
+  }
+
+  return $self->$orig($ctx, $req);
+};
+
 1;
