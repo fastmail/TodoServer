@@ -13,7 +13,7 @@ __PACKAGE__->table('todos');
 __PACKAGE__->ix_add_columns;
 
 __PACKAGE__->ix_add_properties(
-  listId      => { data_type => 'idstr' },
+  listId      => { data_type => 'idstr', xref_to => 'TodoList' },
   precedence  => { data_type => 'integer' },
   isComplete  => { data_type => 'boolean' },
   summary     => { data_type => 'string' },
