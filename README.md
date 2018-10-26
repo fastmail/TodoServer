@@ -6,6 +6,7 @@
 * clone, then use dzil to install [Test::PgMonger](https://github.com/fastmail/Test-PgMonger)
 * clone, then use dzil to install [Ix](https://github.com/fastmail/Ix)
 * clone the [TodoServer](https://github.com/fastmail/TodoServer) repo
+* build Overture: `cd overture; npm install`
 * from it, run: `plackup -I lib -MTodoServer::App -e 'TodoServer::App->oneoff'`
 
 
