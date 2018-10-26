@@ -112,13 +112,14 @@ around _core_request => sub ($orig, $self, $ctx, $req) {
   }
 
   if ($path =~ m{^/(examples|build)/}n) {
-    if (-f ".$path") {
+    my $disk_path = "./overture/$path";
+    if (-f $disk_path) {
       my $type  = $path =~ /\.css$/ ? 'text/css'
                 : $path =~ /\.js$/  ? 'text/javascript'
                 : $path =~ /\.png$/ ? 'image/png'
                 :                     'application/octet-stream';
 
-      open my $fh, '<', ".$path" or die "can't read $path: $!";
+      open my $fh, '<', $disk_path or die "can't read $path: $!";
       return [
         200,
         [ 'Content-Type' => $type ],
@@ -126,7 +127,7 @@ around _core_request => sub ($orig, $self, $ctx, $req) {
       ];
     }
 
-    open my $fh, '<', 'examples/Todo/index.html'
+    open my $fh, '<', './overture/examples/Todo/index.html'
       or die "can't read index: $!";
 
     return [
