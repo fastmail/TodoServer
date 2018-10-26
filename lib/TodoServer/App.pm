@@ -49,7 +49,8 @@ sub oneoff ($class) {
         create => {
           1 => { listId => "#first", summary => "Arrive in Gaul", precedence => 1 },
           2 => { listId => "#first", summary => "Observe the state of Gaul", precedence => 2 },
-          3 => { listId => "#first", summary => "Conquer Gaul", precedence => 3 },
+          3 => { listId => "#first", summary => "Conquer Gaul", precedence => 3,
+                 dueBy  => Ix::DateTime->now->add(months => 1) },
         },
       },
     ],

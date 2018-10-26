@@ -17,6 +17,7 @@ __PACKAGE__->ix_add_properties(
   precedence  => { data_type => 'integer' },
   isComplete  => { data_type => 'boolean' },
   summary     => { data_type => 'string' },
+  dueBy       => { data_type => 'timestamptz', is_optional => 1 },
 );
 
 sub ix_default_properties {
